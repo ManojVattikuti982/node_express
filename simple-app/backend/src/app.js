@@ -113,7 +113,7 @@ app.get("/products/:id",async (req,res,next)=>{
 app.patch("/products/:id", async (req,res,next)=>{
     try{
         let {id}=req.params;
-        let updatedProduct=await Product.findByIdAndUpdate(id,req.body,{new:true});
+        let updatedProduct=await Product.findByIdAndUpdate(id,{...req.body},{new:true});
         if(!updatedProduct){
             res.status(404).json({message:`no product found with id ${id}`})
             return;
