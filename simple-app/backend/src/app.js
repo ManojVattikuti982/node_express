@@ -1,3 +1,4 @@
+import { log } from "console";
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
@@ -72,6 +73,72 @@ app.post("/products",async (req,res,next)=>{
         res.status(500).json({message:"internal server error"})
         return;
     }
+})
+
+//get all products
+app.get("/products",async (req,res,next)=>{
+    try{
+        let products=await Product.find();
+        if(products?.length<=0){
+            res.status(404).json({message:"no products found"});
+            return;
+        }
+        res.status(200).json(products);
+    } catch(error){
+        log("error in getting products route",error);
+        res.status(500).json({message:"internal server error"});
+    }
+});
+
+//get single product by id
+//dynamic url route
+//route parametes--they are named url segments which can be captured
+//The captured values are populated in the req.params object
+app.get("/products/:id",async (req,res,next)=>{
+    try{
+        let {id}=req.params;
+        let product = await Product.findById(id);
+        if(!product){
+            res.status(404).json({message:`no product found with id ${id}`});
+            return;
+        }
+        res.status(200).json(product)
+    } catch(error){
+        console.log("error in getting single product by id",error);
+        res.status(500).json({message:"inetrnal server error"});
+    }
+});
+
+//patch request--update partially
+app.patch("/products/:id", async (req,res,next)=>{
+    try{
+        let {id}=req.params;
+        let updatedProduct=await Product.findByIdAndUpdate(id,req.body,{new:true});
+        if(!updatedProduct){
+            res.status(404).json({message:`no product found with id ${id}`})
+            return;
+        }
+        res.status(200).json(updatedProduct);
+    } catch(error){
+        console.log("error in updating product",error);
+        res.status(500).json({message:"internal server error"});
+    }
+});
+
+//delete product
+app.delete("/products/:id", async (req,res,next)=>{
+    try{
+        let {id}=req.params;
+        let deletedProduct = await Product.findByIdAndDelete(id);
+        if(!deletedProduct){
+            res.status(404).json({message:`no product found with id ${id}`});
+            return;
+        }
+    }catch(error){
+        console.log(("error in deleting product",error));
+        res.status(500).json({message:"internal server error"});
+    }
+    res.status(204).json({}); //no content to send back
 })
 
 export default app;
