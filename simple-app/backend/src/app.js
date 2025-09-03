@@ -78,7 +78,12 @@ app.post("/products",async (req,res,next)=>{
 //get all products
 app.get("/products",async (req,res,next)=>{
     try{
-        let products=await Product.find();
+        let query = {};
+         // { "<field>": { "$regex": "pattern", "$options": "<options>" } }
+        if (req.query.search) {
+        query.productName = { "$regex": req.query.search, "$options": "i" };
+        }  
+        let products=await Product.find(query);
         if(products?.length<=0){
             res.status(404).json({message:"no products found"});
             return;
