@@ -26,13 +26,15 @@ export const createProduct = async (req,res,next)=>{
 
 export const getProducts = async (req,res,next)=>{
     try{
+        let {pname,category} = req.query;
+
         let query = {};
          // { "<field>": { "$regex": "pattern", "$options": "<options>" } }
-        if (req.query.search) {
-        query.productName = { "$regex": req.query.search, "$options": "i" };
+        if (pname) { //req.query.search
+        query.productName = { "$regex": pname, "$options": "i" };
         }  
-        if(req.query.category){
-            query.category = req.query.category;
+        if(category){ //req.query.category
+            query.category = category;
         }
         let products=await Product.find(query);
         if(products?.length<=0){
