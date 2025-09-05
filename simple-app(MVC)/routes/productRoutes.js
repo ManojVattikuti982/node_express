@@ -3,6 +3,10 @@ let router = express.Router();
 
 import { createProduct, deleteProduct, getProduct, getProducts, updateProduct } from '../controllers/productController.js';
 
+router.get("/home",(req,res)=>{
+    let userName = "Manoj"
+    res.render("home",{userName})
+})
 
 //create product
 router.post("/",createProduct);
