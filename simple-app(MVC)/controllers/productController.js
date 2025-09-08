@@ -3,20 +3,12 @@ import Product from "../models/productModel.js";
 export const createProduct = async (req,res,next)=>{
    let {productName,price,category}=req.body;
     try{
-        if(!productName || !category){
-            res.status(400).jason({message:"please fill all fields"})
-            return;
-        }
-        let newProduct = await Product.create({
+        await Product.create({
             productName,
             price,
             category
         })
-        if(!newProduct){
-            res.status(400).json({message:"Error creating product"})
-            return;
-        }
-        res.status(201).json(newProduct)
+        res.redirect("/products"); //GET /products
     } catch(error){
         console.log("error in creating product",error);
         res.status(500).json({message:"internal server error"})
@@ -37,11 +29,7 @@ export const getProducts = async (req,res,next)=>{
             query.category = category;
         }
         let products=await Product.find(query);
-        if(products?.length<=0){
-            res.status(404).json({message:"no products found"});
-            return;
-        }
-        res.status(200).json(products);
+        res.render("home",{products});
     } catch(error){
         log("error in getting products route",error);
         res.status(500).json({message:"internal server error"});
