@@ -3,46 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Product List</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-   <h1>Product Mart</h1>
-   <header>
-    <h2>Create Product</h2>
-    <form action="" method="post">
-        <label for="productName">productName</label>
-        <input type="text" name="productName" id="productName">
-        <label for="price">price</label>
-        <input type="number" name="price" id="price">
-        <label for="category">category</label>
-        <select name="category" id="category">
-            <option value="stationery">stationery</option>
-            <option value="kitchen">kitchen</option>
-            <option value="electronics">electronics</option>
-            <option value="apparels">apparels</option>
-        </select>
-        <label for="quantity">Quantity</label>
-        <input type="number" name="quantity" id="quantity">
-        <button type="submit">Create Product</button>
-        <button type="reset">Clear</button>
-    </form>
-   </header>
-   <main>
-    <h2>List of Products Available</h2>
-    <ul>
-        <% if(locals.products.length == 0) { %>
-            <p>No products found</p>
-        <% } %>
-
-        <% locals.products.forEach(product => { %>
-            <li> <b>Product name:</b> <%= product.productName %> - <b>Price:</b> <%= product.price %> </li> 
-            <button><a href="/products/<%= product._id %>">View</a></button>
-            <form action="/products/<%= product._id %>?_method=DELETE" method="post">
-                <button>Delete</button>
-            </form>
-        <% }); %>
-    </ul>
-   </main>
+    <div class="container">
+        <h1>Product List</h1>
+        <div class="product-grid">
+            <% products.forEach(product => { %>
+                <div class="product-card">
+                    <div class="product-title"><%= product.productName %></div>
+                    <div class="product-category">Category: <%= product.category %></div>
+                    <div class="product-price">₹ <%= product.price %></div>
+                    <div class="product-quantity">Quantity: <%= product.quantity %></div>
+                    <div class="product-fastmoving">
+                        Fast Moving: 
+                        <span style="color:<%= product.isFastMoving ? '#27ae60' : '#e74c3c' %>;">
+                            <%= product.isFastMoving ? "Yes" : "No" %>
+                        </span>
+                    </div>
+                    <div class="button-group">
+                        <a href="/products/<%= product._id %>" class="btn edit">Edit</a>
+                        <form action="/products/<%= product._id %>?_method=DELETE" method="POST" style="display:inline;">
+                            <button type="submit" class="btn delete">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
 </body>
 </html>
