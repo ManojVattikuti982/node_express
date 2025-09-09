@@ -44,7 +44,7 @@ export const getProduct = async (req,res,next)=>{
             res.status(404).json({message:`no product found with id ${id}`});
             return;
         }
-        res.status(200).json(product)
+        res.render("UpdateProduct",{product});
     } catch(error){
         console.log("error in getting single product by id",error);
         res.status(500).json({message:"inetrnal server error"});
@@ -54,12 +54,8 @@ export const getProduct = async (req,res,next)=>{
 export const updateProduct = async (req,res,next)=>{
     try{
         let {id}=req.params;
-        let updatedProduct=await Product.findByIdAndUpdate(id,{...req.body},{new:true});
-        if(!updatedProduct){
-            res.status(404).json({message:`no product found with id ${id}`})
-            return;
-        }
-        res.status(200).json(updatedProduct);
+        await Product.findByIdAndUpdate(id,{...req.body});
+        res.redirect("/products");
     } catch(error){
         console.log("error in updating product",error);
         res.status(500).json({message:"internal server error"});
@@ -69,14 +65,10 @@ export const updateProduct = async (req,res,next)=>{
 export const deleteProduct = async (req,res,next)=>{
     try{
         let {id}=req.params;
-        let deletedProduct = await Product.findByIdAndDelete(id);
-        if(!deletedProduct){
-            res.status(404).json({message:`no product found with id ${id}`});
-            return;
-        }
+        await Product.findByIdAndDelete(id);
+        res.redirect("/products")
     }catch(error){
         console.log(("error in deleting product",error));
         res.status(500).json({message:"internal server error"});
     }
-    res.status(204).json({}); //no content to send back
 }

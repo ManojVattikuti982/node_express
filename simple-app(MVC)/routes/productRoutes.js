@@ -17,7 +17,7 @@ router.get("/", getProducts);
 router.get("/:id", getProduct);
 
 //patch request--update partially
-router.patch("/:id", updateProduct);
+router.put ("/:id", updateProduct);
 
 //delete product
 router.delete("/:id", deleteProduct);
